@@ -2,7 +2,6 @@ import { Client, Account, Databases, Storage } from 'appwrite';
 
 const client = new Client();
 
-// Replace with your actual Appwrite Project ID and Endpoint
 client
     .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT) 
     .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID)
