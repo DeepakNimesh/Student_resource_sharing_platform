@@ -31,7 +31,10 @@ export const AuthProvider = ({ children }) => {
             setUser(currentUser);
             return { success: true };
         } catch (error) {
-            return { success: false, message: error.message };
+            let message = error.message;
+            if (error.type === 'user_invalid_credentials') message = "Invalid email or password. Please try again.";
+            if (error.type === 'user_not_found') message = "Account not found. Please sign up.";
+            return { success: false, message: message };
         } finally {
             setLoading(false);
         }
@@ -44,7 +47,9 @@ export const AuthProvider = ({ children }) => {
             await login(email, password);
             return { success: true };
         } catch (error) {
-            return { success: false, message: error.message };
+            let message = error.message;
+            if (error.type === 'user_already_exists') message = "An account with this email already exists.";
+            return { success: false, message: message };
         } finally {
             setLoading(false);
         }

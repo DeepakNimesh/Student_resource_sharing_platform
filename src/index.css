@@ -2,35 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
+/* @layer base {
   body {
-    @apply bg-slate-950 text-slate-200 antialiased selection:bg-primary-500/30 selection:text-primary-200;
+    @apply bg-slate-950 text-slate-200 antialiased selection:bg-indigo-500/30 selection:text-indigo-200 overflow-x-hidden;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 }
 
-.card-hover {
-  @apply transition-all duration-300 hover:shadow-2xl hover:shadow-primary-500/10 hover:-translate-y-1 hover:border-primary-500/30;
+@layer components {
+  .btn-primary {
+    @apply px-6 py-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-500 active:scale-95 transition-all font-bold disabled:opacity-50 shadow-lg shadow-indigo-900/30;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-2.5 bg-white/5 text-slate-200 border border-white/10 rounded-xl hover:bg-white/10 hover:text-white active:scale-95 transition-all font-bold;
+  }
+
+  .glass-card {
+    @apply bg-slate-900/40 backdrop-blur-2xl border border-white/5 rounded-[32px] shadow-2xl;
+  }
 }
 
-.input-field {
-  @apply w-full px-4 py-2 bg-slate-900 border border-slate-800 rounded-lg text-slate-100 focus:ring-2 focus:ring-primary-500 focus:border-primary-500/50 outline-none transition-all placeholder:text-slate-600;
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
 
-.btn-primary {
-  @apply px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-500 active:scale-95 transition-all font-semibold disabled:opacity-50 shadow-lg shadow-primary-900/30;
+.animate-shake {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-.btn-secondary {
-  @apply px-6 py-2 bg-slate-800 text-slate-200 border border-slate-700 rounded-lg hover:bg-slate-700 hover:text-white active:scale-95 transition-all font-semibold;
-}
-
-/* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
   @apply bg-slate-950;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
+  @apply bg-slate-900 rounded-full border-2 border-slate-950 hover:bg-indigo-600/50 transition-colors;
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #0f172a inset;
+  transition: background-color 5000s ease-in-out 0s;
+} */

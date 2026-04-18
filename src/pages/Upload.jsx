@@ -3,7 +3,7 @@ import { storage, databases, APPWRITE_CONFIG } from '../appwrite/config';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { ID } from 'appwrite';
-import { Upload as UploadIcon, FileText, CheckCircle2, Loader2, ArrowLeft, Plus } from 'lucide-react';
+import { Upload as UploadIcon, FileText, CheckCircle2, Loader2, ArrowLeft, Plus, X } from 'lucide-react';
 
 const Upload = () => {
     const { user } = useAuth();
@@ -23,14 +23,12 @@ const Upload = () => {
 
         setUploading(true);
         try {
-            // 1. Upload file to Storage
             const fileResponse = await storage.createFile(
                 APPWRITE_CONFIG.bucketId,
                 ID.unique(),
                 file
             );
 
-            // 2. Create document in Database
             await databases.createDocument(
                 APPWRITE_CONFIG.databaseId,
                 APPWRITE_CONFIG.collectionId,
@@ -49,7 +47,7 @@ const Upload = () => {
             );
 
             setSuccess(true);
-            setTimeout(() => navigate('/'), 2000);
+            setTimeout(() => navigate('/resources'), 2000);
         } catch (error) {
             console.error('Upload failed:', error);
             alert('Upload failed: ' + error.message);
@@ -60,14 +58,14 @@ const Upload = () => {
 
     if (success) {
         return (
-            <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center animate-in fade-in zoom-in duration-300">
-                <div className="bg-slate-900 p-12 rounded-3xl shadow-2xl shadow-black/40 border border-slate-800 flex flex-col items-center gap-6 max-w-sm text-center">
-                    <div className="w-20 h-20 bg-green-950/30 text-green-500 rounded-full flex items-center justify-center">
-                        <CheckCircle2 className="w-12 h-12" />
+            <div className="min-h-[70vh] flex flex-col items-center justify-center p-4">
+                <div className="bg-slate-900/50 backdrop-blur-xl p-12 rounded-[40px] border border-indigo-500/20 flex flex-col items-center gap-8 max-w-md text-center shadow-2xl shadow-indigo-900/20">
+                    <div className="w-24 h-24 bg-indigo-600 rounded-3xl flex items-center justify-center shadow-lg shadow-indigo-900/40">
+                        <CheckCircle2 className="w-12 h-12 text-white" />
                     </div>
-                    <div>
-                        <h2 className="text-2xl font-bold text-white mb-2">Upload Successful!</h2>
-                        <p className="text-slate-400 font-medium">Your resource has been shared with the community. Redirecting to home...</p>
+                    <div className="space-y-3">
+                        <h2 className="text-3xl font-black text-white tracking-tight">Resource Shared!</h2>
+                        <p className="text-slate-400 font-medium leading-relaxed">Your contribution has been successfully added to the repository. Redirecting to resources...</p>
                     </div>
                 </div>
             </div>
@@ -75,51 +73,57 @@ const Upload = () => {
     }
 
     return (
-        <div className="max-w-3xl mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto px-4 py-16">
             <button 
-                onClick={() => navigate('/')}
-                className="flex items-center gap-2 text-slate-500 hover:text-slate-300 transition-colors font-bold mb-8 group"
+                onClick={() => navigate('/resources')}
+                className="flex items-center gap-3 text-slate-500 hover:text-indigo-400 transition-all font-black uppercase tracking-widest text-[10px] mb-12 group"
             >
-                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                <span>Back to Dashboard</span>
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <span>Back to Repository</span>
             </button>
 
-            <div className="bg-slate-900 rounded-3xl shadow-xl shadow-black/20 border border-slate-800 overflow-hidden">
-                <div className="bg-primary-600 p-8 text-white relative overflow-hidden">
-                    <Plus className="absolute -right-4 -top-4 w-32 h-32 opacity-10" />
-                    <h1 className="text-3xl font-extrabold mb-2 relative z-10">Upload Resource</h1>
-                    <p className="text-primary-100 relative z-10 font-medium">Share your knowledge with fellow students.</p>
+            <div className="bg-slate-900/40 backdrop-blur-xl rounded-[48px] border border-white/5 overflow-hidden shadow-2xl">
+                <div className="bg-indigo-600 p-12 text-white relative overflow-hidden">
+                    <div className="absolute -right-8 -top-8 w-48 h-48 bg-white/10 rounded-full blur-3xl"></div>
+                    <div className="relative z-10 space-y-2">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-[10px] font-black uppercase tracking-widest mb-2">
+                            <Plus className="w-3 h-3" />
+                            <span>New Contribution</span>
+                        </div>
+                        <h1 className="text-4xl font-black tracking-tight leading-none">Share Your Knowledge</h1>
+                        <p className="text-indigo-100 font-medium">Contribute to the collective intelligence of your peers.</p>
+                    </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-1.5 md:col-span-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Resource Title</label>
+                <form onSubmit={handleSubmit} className="p-12 space-y-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-3 md:col-span-2">
+                            <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1 block">Resource Title</label>
                             <input 
                                 type="text" 
-                                className="input-field" 
-                                placeholder="e.g. Data Structures Notes" 
+                                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl outline-none text-white font-bold focus:border-indigo-500/50 transition-all" 
+                                placeholder="e.g. Advanced Thermodynamics Notes" 
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 required
                             />
                         </div>
 
-                        <div className="space-y-1.5 md:col-span-2">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Description</label>
+                        <div className="space-y-3 md:col-span-2">
+                            <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1 block">Description</label>
                             <textarea 
-                                className="input-field min-h-[100px] resize-none" 
-                                placeholder="Briefly describe what's inside..." 
+                                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl outline-none text-white font-bold focus:border-indigo-500/50 transition-all min-h-[120px] resize-none" 
+                                placeholder="Briefly explain what's covered in this resource..." 
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 required
                             />
                         </div>
 
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Semester</label>
+                        <div className="space-y-3">
+                            <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1 block">Semester</label>
                             <select 
-                                className="input-field appearance-none cursor-pointer" 
+                                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl outline-none text-white font-bold focus:border-indigo-500/50 transition-all appearance-none cursor-pointer" 
                                 value={semester}
                                 onChange={(e) => setSemester(e.target.value)}
                                 required
@@ -131,12 +135,12 @@ const Upload = () => {
                             </select>
                         </div>
 
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Batch</label>
+                        <div className="space-y-3">
+                            <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1 block">Batch / Year</label>
                             <input 
                                 type="text" 
-                                className="input-field" 
-                                placeholder="e.g. 2021-2025" 
+                                className="w-full px-6 py-4 bg-white/5 border border-white/10 rounded-2xl outline-none text-white font-bold focus:border-indigo-500/50 transition-all" 
+                                placeholder="e.g. 2022-2026" 
                                 value={batch}
                                 onChange={(e) => setBatch(e.target.value)}
                                 required
@@ -144,8 +148,8 @@ const Upload = () => {
                         </div>
                     </div>
 
-                    <div className="space-y-1.5">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">PDF Document</label>
+                    <div className="space-y-3">
+                        <label className="text-xs font-black text-slate-500 uppercase tracking-widest ml-1 block">PDF Document</label>
                         <div className="relative group">
                             <input 
                                 type="file" 
@@ -155,33 +159,50 @@ const Upload = () => {
                                 id="pdf-upload"
                                 required
                             />
-                            <label 
-                                htmlFor="pdf-upload"
-                                className="flex flex-col items-center justify-center border-2 border-dashed border-slate-800 rounded-2xl p-10 cursor-pointer group-hover:border-primary-500/50 group-hover:bg-primary-950/20 transition-all"
-                            >
-                                <div className="p-4 bg-slate-800 rounded-full mb-4 group-hover:bg-slate-700 transition-colors">
-                                    {file ? <FileText className="w-8 h-8 text-primary-400" /> : <UploadIcon className="w-8 h-8 text-slate-600 group-hover:text-primary-400" />}
+                            {file ? (
+                                <div className="flex items-center justify-between p-6 bg-indigo-500/10 border border-indigo-500/30 rounded-2xl">
+                                    <div className="flex items-center gap-4">
+                                        <div className="p-3 bg-indigo-600 rounded-xl">
+                                            <FileText className="w-6 h-6 text-white" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-bold text-white truncate max-w-[200px]">{file.name}</span>
+                                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">{(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => setFile(null)} className="p-2 text-slate-500 hover:text-red-400 transition-colors">
+                                        <X className="w-5 h-5" />
+                                    </button>
                                 </div>
-                                <span className="font-bold text-slate-300">{file ? file.name : 'Select PDF File'}</span>
-                                <p className="text-slate-500 text-sm mt-1">Maximum file size: 10MB</p>
-                            </label>
+                            ) : (
+                                <label 
+                                    htmlFor="pdf-upload"
+                                    className="flex flex-col items-center justify-center border-2 border-dashed border-white/10 rounded-[32px] p-16 cursor-pointer hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all group"
+                                >
+                                    <div className="p-6 bg-slate-900 rounded-3xl mb-6 group-hover:scale-110 transition-transform duration-500">
+                                        <UploadIcon className="w-10 h-10 text-indigo-500" />
+                                    </div>
+                                    <span className="text-lg font-bold text-white mb-2">Select your PDF</span>
+                                    <p className="text-slate-500 text-sm font-medium">Click to browse or drag and drop (Max 10MB)</p>
+                                </label>
+                            )}
                         </div>
                     </div>
 
                     <button 
                         type="submit" 
                         disabled={uploading || !file}
-                        className="w-full btn-primary py-4 flex items-center justify-center gap-2 text-lg shadow-primary-900/40"
+                        className="w-full py-5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-[24px] font-black text-lg transition-all shadow-2xl shadow-indigo-900/40 flex items-center justify-center gap-3 active:scale-[0.98]"
                     >
                         {uploading ? (
                             <>
-                                <Loader2 className="animate-spin" />
-                                <span>Uploading Resource...</span>
+                                <Loader2 className="w-6 h-6 animate-spin" />
+                                <span className="uppercase tracking-widest text-sm">Publishing to Repository...</span>
                             </>
                         ) : (
                             <>
-                                <UploadIcon className="w-5 h-5" />
-                                <span>Share Resource</span>
+                                <UploadIcon className="w-6 h-6" />
+                                <span className="uppercase tracking-widest text-sm">Upload Resource</span>
                             </>
                         )}
                     </button>
