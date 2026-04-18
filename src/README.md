@@ -1,0 +1,1 @@
+This Student Resource Sharing Platform is a collaborative, peer-to-peer ecosystem designed to centralize and simplify academic resource management. Built with a modern React frontend and a robust Appwrite/Firebase backend, it serves as a digital library where students can exchange knowledge, save costs, and improve their study efficiency.
